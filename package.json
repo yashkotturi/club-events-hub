@@ -9,8 +9,16 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@supabase/auth-helpers-nextjs": "^0.15.0",
+    "@supabase/auth-helpers-react": "^0.15.0",
+    "@supabase/supabase-js": "^2.103.0",
+    "chart.js": "^4.5.1",
+    "date-fns": "^4.1.0",
+    "lucide-react": "^1.8.0",
     "next": "16.2.3",
+    "qrcode": "^1.5.4",
     "react": "19.2.4",
+    "react-chartjs-2": "^5.3.1",
     "react-dom": "19.2.4"
   },
   "devDependencies": {
