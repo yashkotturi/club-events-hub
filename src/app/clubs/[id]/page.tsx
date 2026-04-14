@@ -11,7 +11,6 @@ import {
   Loader2, 
   ExternalLink,
   Calendar,
-  Instagram,
   Globe,
   Star
 } from 'lucide-react';
@@ -192,7 +191,7 @@ export default function ClubProfilePage() {
                     className="flex items-center space-x-6 group/link"
                   >
                     <div className="p-4 bg-white/[0.03] border border-white/5 rounded-2xl text-muted group-hover/link:text-indigo-400 group-hover/link:border-indigo-500/30 transition-all">
-                      <Instagram className="w-5 h-5" />
+                      <ExternalLink className="w-5 h-5" />
                     </div>
                     <div>
                       <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted block mb-1">Engagement</span>
