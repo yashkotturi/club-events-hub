@@ -115,12 +115,15 @@ export default function Home() {
 
   const categories = ['All', 'Technical', 'Non-Technical', 'Social', 'Competition', 'Other'];
 
-  const filteredEvents = events.filter(event => {
-    const eventDate = new Date(event.date_time);
-    const matchesDate = isSameDay(eventDate, selectedDate);
+  const globalFilteredEvents = events.filter(event => {
     const matchesCategory = categoryFilter === 'All' || event.category === categoryFilter;
     const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesDate && matchesCategory && matchesSearch;
+    return matchesCategory && matchesSearch;
+  });
+
+  const filteredEvents = globalFilteredEvents.filter(event => {
+    const eventDate = new Date(event.date_time);
+    return isSameDay(eventDate, selectedDate);
   });
 
   // Map of dates with events for calendar indicators
@@ -190,26 +193,40 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2. Categories Section */}
-      <section className="py-16 border-y border-white/5 bg-white/[0.02] backdrop-blur-md">
+      {/* 2. Categories & Universal Search Section */}
+      <section className="py-8 border-y border-white/5 bg-white/[0.02] backdrop-blur-md relative z-30">
         <div className="container mx-auto px-6">
-          <div className="flex items-center space-x-6 overflow-x-auto pb-4 no-scrollbar">
-            <div className="flex items-center pr-10 border-r border-white/5 shrink-0 mr-6">
-              <Filter className="w-4 h-4 mr-3 text-indigo-400" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-300">Filter by</span>
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div className="flex items-center space-x-6 overflow-x-auto pb-4 lg:pb-0 no-scrollbar w-full lg:w-auto">
+              <div className="flex items-center pr-10 border-r border-white/5 shrink-0 mr-6">
+                <Filter className="w-4 h-4 mr-3 text-indigo-400" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-300">Filter by</span>
+              </div>
+              {categories.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setCategoryFilter(cat)}
+                  className={`px-8 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all shrink-0 ${categoryFilter === cat
+                      ? 'bg-white text-black shadow-2xl'
+                      : 'bg-white/[0.03] text-muted hover:text-white hover:bg-white/[0.08] border border-white/10'
+                    }`}
+                >
+                  {cat}
+                </button>
+              ))}
             </div>
-            {categories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setCategoryFilter(cat)}
-                className={`px-8 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all shrink-0 ${categoryFilter === cat
-                    ? 'bg-white text-black shadow-2xl'
-                    : 'bg-white/[0.03] text-muted hover:text-white hover:bg-white/[0.08] border border-white/10'
-                  }`}
-              >
-                {cat}
-              </button>
-            ))}
+
+            {/* Universal Search */}
+            <div className="relative w-full lg:w-auto min-w-[320px]">
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-muted/60 w-4 h-4" />
+              <input
+                type="text"
+                placeholder="Global Protocol Search..."
+                className="w-full pl-16 pr-6 py-4 rounded-full bg-black border border-white/10 text-sm placeholder:text-muted/50 focus:ring-2 focus:ring-indigo-500/50 transition-all font-bold text-white shadow-inner"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -229,15 +246,15 @@ export default function Home() {
             
             <div className="hidden md:flex items-center justify-center p-6 bg-white/[0.02] border border-white/5 rounded-[2rem] min-w-40 backdrop-blur-md">
               <div className="text-center">
-                <span className="block text-4xl font-black text-white tabular-nums tracking-tighter leading-none">{events.length}</span>
+                <span className="block text-4xl font-black text-white tabular-nums tracking-tighter leading-none">{globalFilteredEvents.length}</span>
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400 mt-2 block">Active</span>
               </div>
             </div>
           </div>
           
-          {events.length > 0 ? (
+          {globalFilteredEvents.length > 0 ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {events.map(event => (
+              {globalFilteredEvents.map(event => (
                 <EventTimelineCard key={event.id} event={event} />
               ))}
             </div>
@@ -267,19 +284,7 @@ export default function Home() {
                   eventDates={eventDateMarkers}
                 />
 
-                <div className="mt-16 pt-16 border-t border-white/5">
-                  <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-300">Quick Search</h4>
-                  <div className="relative">
-                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-muted/60 w-4 h-4" />
-                    <input
-                      type="text"
-                      placeholder="Find an event..."
-                      className="w-full pl-16 pr-6 py-5 rounded-2xl bg-white/[0.03] border border-white/10 text-sm placeholder:text-muted/50 focus:ring-2 focus:ring-indigo-500/50 transition-all font-bold text-white shadow-inner"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-                </div>
+                {/* Search moved to global header */}
               </div>
             </div>
 
