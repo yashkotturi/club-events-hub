@@ -33,88 +33,97 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black py-16 px-6">
-      <div className="max-w-md w-full">
-        {/* Branding */}
-        <div className="text-center mb-16">
-           <Link href="/" className="inline-flex items-center space-x-3 group mb-10">
-              <div className="p-2 bg-indigo-600 rounded-xl shadow-lg shadow-indigo-500/20">
-                <Sparkles className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-2xl font-black tracking-tighter text-white">
-                Club<span className="text-indigo-400">Hub</span>
-              </span>
-            </Link>
-            <h2 className="text-5xl font-black text-white tracking-tighter mb-4 leading-none">Welcome Back</h2>
-            <p className="text-muted font-bold text-lg">Continue your journey with the MIT Manipal community.</p>
-        </div>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#050505] px-6 relative overflow-hidden">
+      {/* Background ambient glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-emerald-500/10 rounded-full blur-[150px] pointer-events-none" />
 
-        <div className="bg-white/[0.02] border border-white/5 p-12 rounded-[3.5rem] shadow-2xl backdrop-blur-md">
-          {error && (
-            <div className="mb-10 p-5 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center text-red-400 text-xs font-bold leading-relaxed">
-              <X className="w-5 h-5 mr-4 shrink-0" />
-              {error}
+      {/* Branding - Header outside the card */}
+      <div className="text-center mb-8 relative z-10">
+         <Link href="/" className="inline-flex items-center space-x-2 group">
+            <div className="p-1.5 bg-indigo-600 rounded-lg shadow-lg shadow-indigo-500/30">
+              <Sparkles className="w-4 h-4 text-white" />
             </div>
-          )}
+            <span className="text-xl font-black tracking-tighter text-white">
+              Club<span className="text-indigo-400">Hub</span>
+            </span>
+          </Link>
+      </div>
 
-          <form className="space-y-8" onSubmit={handleLogin}>
-            <div className="space-y-8">
-              <div>
-                <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-muted mb-4 ml-2">Identity (Email)</label>
-                <div className="relative">
-                  <Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-muted/30 w-4 h-4" />
-                  <input
-                    type="email"
-                    required
-                    className="w-full pl-16 pr-6 py-5 rounded-2xl bg-white/[0.03] border border-white/5 text-sm placeholder:text-muted/20 focus:ring-2 focus:ring-indigo-500/50 transition-all font-bold text-white shadow-inner"
-                    placeholder="name@university.edu"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div>
-                <div className="flex items-center justify-between mb-4 ml-2">
-                  <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-muted">Secret (Password)</label>
-                  <a href="#" className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400 hover:text-white transition-colors">Reset?</a>
-                </div>
-                <div className="relative">
-                  <Lock className="absolute left-6 top-1/2 -translate-y-1/2 text-muted/30 w-4 h-4" />
-                  <input
-                    type="password"
-                    required
-                    className="w-full pl-16 pr-6 py-5 rounded-2xl bg-white/[0.03] border border-white/5 text-sm placeholder:text-muted/20 focus:ring-2 focus:ring-indigo-500/50 transition-all font-bold text-white shadow-inner"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
-              </div>
+      <div className="w-full max-w-[420px] relative z-20">
+        {/* The Glass Card wrapping border */}
+        <div className="relative p-[1px] rounded-[2.5rem] bg-gradient-to-br from-emerald-400/30 via-white/5 to-transparent shadow-2xl">
+          <div className="relative bg-[#0a0a0a]/90 backdrop-blur-2xl rounded-[2.5rem] p-8 sm:p-10 overflow-hidden">
+            
+            {/* Inner top-left intense glow */}
+            <div className="absolute -top-10 -left-10 w-48 h-48 bg-emerald-500/20 rounded-full blur-[60px] pointer-events-none" />
+            
+            <div className="relative z-10 text-center mb-10">
+              <h2 className="text-3xl font-medium text-white tracking-tight mb-2">Welcome back</h2>
+              <p className="text-sm text-gray-400">Sign in to your account</p>
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-6 bg-white text-black rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] hover:bg-indigo-600 hover:text-white transition-all active:scale-95 flex items-center justify-center mt-12 shadow-2xl"
-            >
-              {loading ? (
-                <Loader2 className="animate-spin h-6 w-6" />
-              ) : (
-                <>
-                  Authenticate
-                  <ArrowRight className="ml-4 w-5 h-5" />
-                </>
-              )}
-            </button>
-          </form>
+            {error && (
+              <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center text-red-400 text-xs font-medium">
+                <X className="w-4 h-4 mr-3 shrink-0" />
+                {error}
+              </div>
+            )}
 
-          <div className="mt-16 pt-12 border-t border-white/5 text-center">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted leading-relaxed">
-              New to the platform?{' '}
-              <Link href="/register" className="text-white hover:text-indigo-400 transition-colors ml-2 underline underline-offset-4">
-                Register Identity
-              </Link>
-            </p>
+            <form onSubmit={handleLogin} className="space-y-4 relative z-10">
+              <div className="bg-[#111] border border-white/5 rounded-2xl p-3 px-5 focus-within:border-emerald-500/30 transition-colors">
+                <span className="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Email</span>
+                <input
+                  type="email"
+                  required
+                  placeholder="name@university.edu"
+                  className="bg-transparent w-full outline-none text-sm text-white placeholder:text-gray-700"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+
+              <div className="bg-[#111] border border-white/5 rounded-2xl p-3 px-5 focus-within:border-emerald-500/30 transition-colors">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-[10px] text-gray-500 uppercase tracking-widest">Password</span>
+                  <a href="#" className="text-[10px] text-gray-500 hover:text-emerald-400 transition-colors">Forgot?</a>
+                </div>
+                <input
+                  type="password"
+                  required
+                  placeholder="••••••••"
+                  className="bg-transparent w-full outline-none text-sm text-white placeholder:text-gray-700 tracking-widest"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+
+              {/* Advanced Submit Pill */}
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full flex items-center justify-between pl-6 pr-2 py-2 bg-[#141414] border border-white/5 rounded-[2rem] hover:bg-white/[0.05] hover:border-white/10 transition-all group disabled:opacity-50 shadow-inner"
+                >
+                  <span className="text-sm text-gray-300 font-medium">Continue with Email</span>
+                  <div className="w-10 h-10 rounded-full bg-emerald-400 flex items-center justify-center shrink-0 group-hover:bg-emerald-300 group-active:scale-95 transition-all shadow-[0_0_15px_rgba(52,211,153,0.3)]">
+                    {loading ? (
+                      <Loader2 className="animate-spin w-4 h-4 text-black" />
+                    ) : (
+                      <ArrowRight className="w-4 h-4 text-black" />
+                    )}
+                  </div>
+                </button>
+              </div>
+            </form>
+
+            <div className="mt-10 relative z-10 text-center">
+              <p className="text-xs text-gray-400">
+                Don't have an account?{' '}
+                <Link href="/register" className="text-emerald-400 hover:text-emerald-300 hover:underline transition-colors font-medium">
+                  Sign up
+                </Link>
+              </p>
+            </div>
           </div>
         </div>
       </div>
