@@ -15,14 +15,17 @@ interface ClubCardProps {
 }
 
 export default function ClubCard({ club }: ClubCardProps) {
+  // Fallback logo using Identicon matching the profile page
+  const logoUrl = club.logo_url || `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(club.name)}`;
+
   return (
     <div className="bg-white/[0.03] backdrop-blur-md rounded-3xl p-8 border border-white/5 card-hover flex flex-col items-center text-center transition-all duration-300">
-      <div className="w-20 h-20 bg-white/[0.02] rounded-[1.5rem] flex items-center justify-center mb-6 overflow-hidden border border-white/5">
-        {club.logo_url ? (
-          <img src={club.logo_url} alt={club.name} className="w-full h-full object-cover" />
-        ) : (
-          <Users className="w-8 h-8 text-indigo-400 opacity-50" />
-        )}
+      <div className="w-20 h-20 bg-white/[0.02] rounded-[1.5rem] flex items-center justify-center mb-6 overflow-hidden border border-white/5 p-3">
+        <img 
+          src={logoUrl} 
+          alt={club.name} 
+          className="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 transition-all" 
+        />
       </div>
       
       <span className="px-3 py-1 bg-white/[0.05] border border-white/10 text-[10px] font-black uppercase tracking-widest text-indigo-400 rounded-full mb-4">
