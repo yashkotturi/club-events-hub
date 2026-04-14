@@ -17,16 +17,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className} suppressHydrationWarning>
+      <body className={`${inter.className} bg-black text-white antialiased`} suppressHydrationWarning>
         <Navbar />
         <main className="min-h-screen">
           {children}
         </main>
-        <footer className="bg-gray-50 border-t py-12">
-          <div className="container mx-auto px-4 text-center text-gray-500 text-sm">
-            <p>© 2026 Club Events Hub. Built for student communities.</p>
-          </div>
-        </footer>
       </body>
     </html>
   );

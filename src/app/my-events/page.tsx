@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
-import { Calendar, MapPin, Clock, Loader2, ArrowRight, QrCode as QrIcon } from 'lucide-react';
+import { Calendar, MapPin, Clock, Loader2, ArrowRight, ExternalLink, Sparkles, X } from 'lucide-react';
 import Link from 'next/link';
-import QRCode from 'qrcode';
+import Badge from '@/components/ui/Badge';
 
 interface Registration {
   id: string;
@@ -66,17 +66,8 @@ export default function MyEventsPage() {
       if (error) throw error;
       setRegistrations(data || []);
 
-      // Generate QRs for all registrations
-      const qrs: Record<string, string> = {};
-      for (const reg of data || []) {
-        const qr = await QRCode.toDataURL(JSON.stringify({
-          registrationId: reg.id,
-          eventId: reg.event_id,
-          userId: session.user.id
-        }));
-        qrs[reg.id] = qr;
-      }
-      setQrCodeData(qrs);
+      if (error) throw error;
+      setRegistrations(data || []);
 
     } catch (error) {
       console.error('Error fetching my events:', error);
@@ -87,8 +78,8 @@ export default function MyEventsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-10 h-10 animate-spin text-indigo-600" />
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <Loader2 className="w-12 h-12 animate-spin text-indigo-500" />
       </div>
     );
   }
@@ -97,36 +88,44 @@ export default function MyEventsPage() {
   const past = registrations.filter(r => new Date(r.events.date_time) <= new Date());
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 pb-32">
-      <div className="container mx-auto px-4">
-        <h1 className="text-4xl font-extrabold text-gray-900 mb-2">My Registered Events</h1>
-        <p className="text-gray-500 mb-12">Track your participation and access your check-in codes.</p>
+    <div className="min-h-screen bg-black pt-40 pb-32">
+      <div className="container mx-auto px-6">
+        <div className="mb-20">
+          <div className="flex items-center space-x-3 text-indigo-400 font-black text-[10px] uppercase tracking-[0.2em] mb-4">
+            <Sparkles className="w-4 h-4" />
+            <span>Personal Dashboard</span>
+          </div>
+          <h1 className="text-5xl md:text-6xl font-black text-white tracking-tighter leading-none">My Experience</h1>
+          <p className="text-muted font-bold mt-4 max-w-lg text-lg">Track your registered events and access your check-in portals in the campus ecosystem.</p>
+        </div>
 
         {registrations.length === 0 ? (
-          <div className="bg-white rounded-3xl p-12 text-center shadow-sm border border-gray-100">
-            <div className="inline-block p-6 bg-gray-50 rounded-full mb-6 text-gray-400">
+          <div className="bg-white/[0.01] rounded-[3.5rem] p-32 text-center border border-white/5 shadow-2xl">
+            <div className="inline-block p-10 bg-white/[0.03] rounded-full mb-10 text-indigo-400">
               <Calendar className="w-16 h-16" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">You haven't registered for any events yet</h3>
-            <p className="text-gray-500 mb-8 max-w-md mx-auto">Explore upcoming events from your favorite clubs and start getting involved!</p>
-            <Link href="/" className="inline-flex items-center px-8 py-4 gradient-bg text-white rounded-2xl font-bold shadow-lg shadow-indigo-200">
-              Browse Events <ArrowRight className="ml-2 w-5 h-5" />
+            <h3 className="text-3xl font-black text-white mb-4 tracking-tighter">No activations found</h3>
+            <p className="text-muted font-medium mb-12 max-w-sm mx-auto leading-relaxed text-lg">You haven't registered for any events yet. Start your journey by exploring the campus hub.</p>
+            <Link href="/" className="btn-primary inline-flex items-center text-[10px] uppercase tracking-[0.2em] px-12 py-5 shadow-2xl">
+              Explore Events <ArrowRight className="ml-3 w-5 h-5" />
             </Link>
           </div>
         ) : (
-          <div className="space-y-16">
+          <div className="space-y-32">
             {upcoming.length > 0 && (
               <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-8 flex items-center">
-                  <span className="w-3 h-3 bg-green-500 rounded-full mr-3" />
-                  Upcoming Events
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="flex items-center justify-between mb-12 pb-8 border-b border-white/5">
+                  <h2 className="text-3xl font-black text-white tracking-tighter flex items-center">
+                    <span className="w-3 h-3 bg-indigo-500 rounded-full mr-6 shadow-[0_0_15px_rgba(99,102,241,0.6)]" />
+                    Upcoming Actions
+                  </h2>
+                  <Badge variant="info">{upcoming.length} Events</Badge>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                   {upcoming.map(reg => (
                     <RegistrationCard 
                       key={reg.id} 
                       registration={reg} 
-                      qrUrl={qrCodeData[reg.id]} 
                     />
                   ))}
                 </div>
@@ -135,16 +134,18 @@ export default function MyEventsPage() {
 
             {past.length > 0 && (
               <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-8 flex items-center">
-                  <span className="w-3 h-3 bg-gray-400 rounded-full mr-3" />
-                  Past Participation
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 grayscale opacity-75">
+                <div className="flex items-center justify-between mb-12 pb-8 border-b border-white/5">
+                  <div className="flex items-center text-3xl font-black text-white tracking-tighter opacity-60">
+                    <span className="w-3 h-3 bg-white/20 rounded-full mr-6" />
+                    Historical Graph
+                  </div>
+                  <Badge variant="neutral">{past.length} Attended</Badge>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 opacity-40">
                   {past.map(reg => (
                     <RegistrationCard 
                       key={reg.id} 
                       registration={reg} 
-                      qrUrl={qrCodeData[reg.id]} 
                       isPast={true}
                     />
                   ))}
@@ -160,11 +161,9 @@ export default function MyEventsPage() {
 
 function RegistrationCard({ 
   registration, 
-  qrUrl, 
   isPast = false 
 }: { 
   registration: Registration; 
-  qrUrl?: string;
   isPast?: boolean;
 }) {
   const { events: event } = registration;
@@ -172,78 +171,51 @@ function RegistrationCard({
   const [showQR, setShowQR] = useState(false);
 
   return (
-    <div className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100 flex flex-col h-full">
-      <div className="relative h-48">
+    <div className="bg-white/[0.03] rounded-[3rem] overflow-hidden border border-white/5 flex flex-col h-full card-hover group shadow-2xl backdrop-blur-sm">
+      <div className="relative h-60">
         <img 
           src={event.image_url || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070&auto=format&fit=crop'} 
           alt={event.title}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover grayscale-[0.5] group-hover:grayscale-0 transition-all duration-700"
         />
-        <div className="absolute top-4 right-4 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-[10px] font-bold text-indigo-600 uppercase tracking-widest">
-          {registration.status}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+        <div className="absolute top-8 right-8">
+          <Badge variant={isPast ? 'neutral' : 'success'}>
+            {registration.status}
+          </Badge>
         </div>
       </div>
 
-      <div className="p-6 flex-1 flex flex-col">
-        <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-1">{event.title}</h3>
-        <p className="text-xs font-bold text-indigo-500 uppercase tracking-widest mb-4">{event.clubs.name}</p>
+      <div className="p-10 flex-1 flex flex-col">
+        <p className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] mb-4 leading-none">{event.clubs.name}</p>
+        <h3 className="text-2xl font-black text-white mb-8 leading-[1.1] tracking-tighter line-clamp-2">{event.title}</h3>
 
-        <div className="space-y-2 mb-6">
-          <div className="flex items-center text-xs text-gray-500">
-            <Calendar className="w-3.5 h-3.5 mr-2 text-gray-400" />
-            <span>{date.toLocaleDateString()}</span>
+        <div className="space-y-5 mb-12">
+          <div className="flex items-center text-xs font-bold text-muted">
+            <Calendar className="w-4 h-4 mr-4 text-indigo-400/60" />
+            <span>{date.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}</span>
           </div>
-          <div className="flex items-center text-xs text-gray-500">
-            <Clock className="w-3.5 h-3.5 mr-2 text-gray-400" />
+          <div className="flex items-center text-xs font-bold text-muted">
+            <Clock className="w-4 h-4 mr-4 text-indigo-400/60" />
             <span>{date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
           </div>
-          <div className="flex items-center text-xs text-gray-500">
-            <MapPin className="w-3.5 h-3.5 mr-2 text-gray-400" />
+          <div className="flex items-center text-xs font-bold text-muted">
+            <MapPin className="w-4 h-4 mr-4 text-indigo-400/60" />
             <span className="line-clamp-1">{event.location}</span>
           </div>
         </div>
 
         {!isPast && (
           <button 
-            onClick={() => setShowQR(true)}
-            className="w-full py-3 bg-gray-50 text-indigo-600 rounded-xl font-bold flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all mt-auto"
+            onClick={() => window.open('https://forms.gle/nK2qvLbHJ599WTU56', '_blank')}
+            className="mt-auto w-full py-5 bg-white text-black rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center hover:bg-indigo-500 hover:text-white transition-all active:scale-95 shadow-2xl"
           >
-            <QrIcon className="w-4 h-4 mr-2" />
-            Show Check-in QR
+            <ExternalLink className="w-4 h-4 mr-4" />
+            Open Registration Form
           </button>
         )}
       </div>
 
-      {/* QR Code Modal Overlay */}
-      {showQR && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-          <div className="bg-white rounded-[40px] p-10 max-w-sm w-full text-center relative animate-in zoom-in-95 duration-200">
-            <button 
-              onClick={() => setShowQR(false)}
-              className="absolute top-6 right-6 text-gray-400 hover:text-gray-900"
-            >
-              Close
-            </button>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">Check-in Terminal</h3>
-            <p className="text-gray-500 mb-8 text-sm">Present this code at the event entrance.</p>
-            
-            <div className="bg-gray-50 p-6 rounded-3xl inline-block mb-8 border-2 border-dashed border-gray-200">
-              {qrUrl ? (
-                <img src={qrUrl} alt="Check-in QR" className="w-48 h-48" />
-              ) : (
-                <Loader2 className="w-48 h-48 animate-spin text-gray-200" />
-              )}
-            </div>
-            
-            <div className="text-sm font-bold text-gray-900 uppercase tracking-widest mb-1">
-              Event ID
-            </div>
-            <div className="text-gray-400 font-mono text-[10px] break-all">
-              {registration.id}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

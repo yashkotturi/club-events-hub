@@ -4,18 +4,19 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import { 
-  BarChart3, 
   Plus, 
-  Calendar, 
   Users, 
   QrCode, 
-  Search, 
   Loader2, 
   ChevronRight,
   TrendingUp,
-  CheckCircle2
+  CheckCircle2,
+  Calendar,
+  LayoutDashboard,
+  ArrowRight
 } from 'lucide-react';
 import Link from 'next/link';
+import Badge from '@/components/ui/Badge';
 
 interface Club {
   id: string;
@@ -35,7 +36,6 @@ export default function AdminDashboard() {
   const [selectedClub, setSelectedClub] = useState<string | null>(null);
   const [events, setEvents] = useState<EventStats[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -52,7 +52,6 @@ export default function AdminDashboard() {
         return;
       }
 
-      // Check profile for admin role
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('role')
@@ -64,9 +63,6 @@ export default function AdminDashboard() {
         return;
       }
 
-      setIsAdmin(true);
-
-      // Fetch clubs managed by this admin
       const { data: managedClubs, error: clubsError } = await supabase
         .from('clubs')
         .select('id, name')
@@ -103,10 +99,7 @@ export default function AdminDashboard() {
         .eq('club_id', clubId)
         .order('date_time', { ascending: false });
 
-      if (eventsError) {
-        console.error('Supabase Error:', eventsError.message, eventsError.details);
-        throw eventsError;
-      }
+      if (eventsError) throw eventsError;
 
       const formattedEvents = (eventsData || []).map((e: any) => ({
         id: e.id,
@@ -124,8 +117,8 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-10 h-10 animate-spin text-indigo-600" />
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <Loader2 className="w-12 h-12 animate-spin text-indigo-500" />
       </div>
     );
   }
@@ -135,72 +128,69 @@ export default function AdminDashboard() {
   const showUpRate = totalRegistered > 0 ? (totalAttended / totalRegistered) * 100 : 0;
 
   return (
-    <div className="min-h-screen bg-gray-50/50 py-12">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
+    <div className="min-h-screen bg-black pt-40 pb-32">
+      <div className="container mx-auto px-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-20 gap-10">
           <div>
-            <h1 className="text-4xl font-extrabold text-gray-900 mb-2">Club Management</h1>
-            <p className="text-gray-500">Monitor engagement and manage your club's presence.</p>
+            <div className="flex items-center space-x-3 text-indigo-400 font-black text-[10px] uppercase tracking-[0.2em] mb-4">
+              <LayoutDashboard className="w-4 h-4" />
+              <span>Admin Console</span>
+            </div>
+            <h1 className="text-5xl md:text-6xl font-black text-white tracking-tighter leading-none">Club Dashboard</h1>
+            <p className="text-muted font-bold mt-4 text-lg">Manage your events and monitor student engagement in real-time.</p>
           </div>
           
-          <div className="flex items-center space-x-3">
-            <Link 
-              href="/admin/scan"
-              className="flex items-center px-6 py-3 bg-white text-gray-700 border border-gray-200 rounded-2xl font-bold hover:bg-gray-50 transition-all shadow-sm"
-            >
-              <QrCode className="w-5 h-5 mr-3 text-indigo-500" />
-              Scan QR
-            </Link>
+          <div className="flex items-center space-x-4">
             <Link 
               href="/admin/events/new"
-              className="flex items-center px-6 py-3 gradient-bg text-white rounded-2xl font-bold hover:opacity-90 transition-all shadow-lg shadow-indigo-200"
+              className="btn-primary flex items-center whitespace-nowrap text-[10px] uppercase tracking-[0.2em] px-10"
             >
-              <Plus className="w-5 h-5 mr-3" />
-              New Event
+              <Plus className="w-4 h-4 mr-3" />
+              Create Event
             </Link>
           </div>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-20">
           <StatCard 
-            icon={<Users className="w-6 h-6" />} 
+            icon={<Users className="w-5 h-5" />} 
             title="Total Registrations" 
             value={totalRegistered.toString()} 
-            subtitle="Across all events"
-            color="indigo"
+            subtitle="Registered Students"
+            variant="indigo"
           />
           <StatCard 
-            icon={<CheckCircle2 className="w-6 h-6" />} 
-            title="Total Attendees" 
+            icon={<CheckCircle2 className="w-5 h-5" />} 
+            title="Total Attendance" 
             value={totalAttended.toString()} 
-            subtitle="Successfully checked in"
-            color="green"
+            subtitle="Verified Check-ins"
+            variant="success"
           />
           <StatCard 
-            icon={<TrendingUp className="w-6 h-6" />} 
-            title="Avg. Show-up Rate" 
+            icon={<TrendingUp className="w-5 h-5" />} 
+            title="Success Rate" 
             value={`${showUpRate.toFixed(1)}%`} 
-            subtitle="Active engagement"
-            color="orange"
+            subtitle="Attendance Efficiency"
+            variant="warning"
           />
         </div>
 
-        {/* Events Table Container */}
-        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-          <div className="p-8 border-b border-gray-100 flex items-center justify-between">
-            <h3 className="text-xl font-bold text-gray-900">Recent Events</h3>
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-400 mr-2">Managing:</span>
+        {/* Recent Events Table */}
+        <div className="bg-white/[0.02] rounded-[3.5rem] border border-white/5 overflow-hidden backdrop-blur-sm shadow-2xl">
+          <div className="p-12 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-8">
+            <h3 className="text-3xl font-black text-white tracking-tighter leading-none">Active Events</h3>
+            <div className="flex items-center bg-white/[0.03] rounded-2xl px-6 py-3 border border-white/5">
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted mr-6">Context:</span>
               <select 
-                className="bg-gray-50 border-none rounded-xl px-4 py-2 text-sm font-bold text-indigo-600 focus:ring-2 focus:ring-indigo-100"
+                className="bg-transparent border-none text-[10px] font-black text-indigo-400 focus:ring-0 cursor-pointer uppercase tracking-[0.2em] p-0"
                 value={selectedClub || ''}
                 onChange={(e) => {
                   setSelectedClub(e.target.value);
                   fetchEventsForClub(e.target.value);
                 }}
               >
-                {clubs.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                {clubs.map(c => <option key={c.id} value={c.id} className="bg-black text-white">{c.name}</option>)}
               </select>
             </div>
           </div>
@@ -208,50 +198,51 @@ export default function AdminDashboard() {
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="bg-gray-50/50 text-gray-400 text-[10px] uppercase tracking-widest font-bold">
-                  <th className="px-8 py-5">Event Title</th>
-                  <th className="px-8 py-5 text-center">Date</th>
-                  <th className="px-8 py-5 text-center">Registrations</th>
-                  <th className="px-8 py-5 text-center">Attended</th>
-                  <th className="px-8 py-5 text-center">Show-up Rate</th>
-                  <th className="px-8 py-5"></th>
+                <tr className="bg-white/[0.02] text-muted text-[10px] uppercase font-black tracking-[0.2em] border-b border-white/5">
+                  <th className="px-12 py-8">Event Narrative</th>
+                  <th className="px-12 py-8 text-center border-x border-white/5">Schedule</th>
+                  <th className="px-12 py-8 text-center border-r border-white/5">Engagement</th>
+                  <th className="px-12 py-8 text-center border-r border-white/5">Attendance</th>
+                  <th className="px-12 py-8"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className="divide-y divide-white/5">
                 {events.map((event) => (
-                  <tr key={event.id} className="group hover:bg-gray-50/50 transition-colors">
-                    <td className="px-8 py-6">
-                      <div className="font-bold text-gray-900">{event.title}</div>
-                      <div className="text-[10px] text-gray-400 font-mono mt-1 uppercase tracking-tighter">{event.id}</div>
-                    </td>
-                    <td className="px-8 py-6 text-center text-sm text-gray-500">
-                      {new Date(event.date_time).toLocaleDateString()}
-                    </td>
-                    <td className="px-8 py-6 text-center">
-                      <span className="inline-flex items-center px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-xs font-bold">
-                        {event.registered}
-                      </span>
-                    </td>
-                    <td className="px-8 py-6 text-center">
-                      <span className="inline-flex items-center px-3 py-1 bg-green-50 text-green-700 rounded-full text-xs font-bold">
-                        {event.attended}
-                      </span>
-                    </td>
-                    <td className="px-8 py-6 text-center">
-                      <div className="w-full bg-gray-100 rounded-full h-1.5 mb-2 max-w-[100px] mx-auto">
-                        <div 
-                          className="bg-indigo-600 h-1.5 rounded-full" 
-                          style={{ width: `${event.registered > 0 ? (event.attended / event.registered) * 100 : 0}%` }}
-                        />
+                  <tr key={event.id} className="group hover:bg-white/[0.03] transition-all">
+                    <td className="px-12 py-10">
+                      <div className="font-black text-white text-xl leading-tight group-hover:text-indigo-400 transition-colors">
+                        {event.title}
                       </div>
-                      <span className="text-[10px] font-bold text-gray-400 uppercase">
-                        {event.registered > 0 ? ((event.attended / event.registered) * 100).toFixed(1) : 0}%
+                      <div className="text-[10px] text-gray-300 font-bold mt-2 tabular-nums tracking-widest uppercase">
+                        Hash: {event.id.slice(0, 8)}
+                      </div>
+                    </td>
+                    <td className="px-12 py-10 text-center border-x border-white/5">
+                      <span className="px-4 py-2 bg-white/[0.05] border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] text-white/80">
+                        {new Date(event.date_time).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                       </span>
                     </td>
-                    <td className="px-8 py-6 text-right">
+                    <td className="px-12 py-10 text-center border-r border-white/5">
+                      <div className="text-2xl font-black text-white tabular-nums">{event.registered}</div>
+                      <div className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mt-2">Registrations</div>
+                    </td>
+                    <td className="px-12 py-10 text-center border-r border-white/5">
+                      <div className="flex flex-col items-center">
+                        <div className="w-32 bg-white/5 rounded-full h-1.5 mb-3 overflow-hidden border border-white/5">
+                          <div 
+                            className="bg-indigo-500 h-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(99,102,241,0.5)]" 
+                            style={{ width: `${event.registered > 0 ? (event.attended / event.registered) * 100 : 0}%` }}
+                          />
+                        </div>
+                        <span className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em]">
+                          {event.registered > 0 ? ((event.attended / event.registered) * 100).toFixed(1) : 0}% Verified
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-12 py-10 text-right">
                       <Link 
                         href={`/admin/events/${event.id}`}
-                        className="p-2 rounded-xl text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all inline-block"
+                        className="p-4 rounded-2xl text-white/60 hover:text-white hover:bg-white/5 transition-all inline-block border border-transparent hover:border-white/5"
                       >
                         <ChevronRight className="w-5 h-5" />
                       </Link>
@@ -261,27 +252,36 @@ export default function AdminDashboard() {
               </tbody>
             </table>
           </div>
+          
+          {events.length === 0 && (
+            <div className="p-32 text-center">
+              <div className="inline-flex p-8 bg-white/[0.02] rounded-full mb-8 text-white/20">
+                <Calendar className="w-16 h-16" />
+              </div>
+              <p className="text-gray-400 font-black text-[10px] uppercase tracking-[0.3em] max-w-xs mx-auto leading-relaxed border-t border-white/5 pt-8">No data protocols founded for this sector selection.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-function StatCard({ icon, title, value, subtitle, color }: any) {
-  const colors: any = {
-    indigo: "bg-indigo-50 text-indigo-600",
-    green: "bg-green-50 text-green-600",
-    orange: "bg-orange-50 text-orange-600",
+function StatCard({ icon, title, value, subtitle, variant }: any) {
+  const styles: any = {
+    indigo: "bg-indigo-500/10 border-indigo-500/20 text-indigo-400 shadow-indigo-500/5",
+    success: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 shadow-emerald-500/5",
+    warning: "bg-amber-500/10 border-amber-500/20 text-amber-400 shadow-amber-500/5",
   };
 
   return (
-    <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100 card-hover">
-      <div className={`p-4 rounded-2xl w-fit mb-6 ${colors[color]}`}>
+    <div className="bg-white/[0.02] rounded-[3.5rem] p-12 border border-white/5 card-hover shadow-xl">
+      <div className={`p-5 rounded-3xl w-fit mb-10 border shadow-inner ${styles[variant]}`}>
         {icon}
       </div>
-      <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">{title}</p>
-      <div className="text-4xl font-extrabold text-gray-900 mb-2">{value}</div>
-      <p className="text-xs text-gray-400 font-medium">{subtitle}</p>
+      <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-3">{title}</p>
+      <div className="text-6xl font-black text-white mb-6 tracking-tighter tabular-nums leading-none">{value}</div>
+      <p className="text-xs text-gray-400 font-bold tracking-tight uppercase leading-none">{subtitle}</p>
     </div>
   );
 }

@@ -1,42 +1,138 @@
 @import "tailwindcss";
-@source "../";
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+@theme {
+  --color-background: var(--bg-base);
+  --color-foreground: var(--text-primary);
+
+  --color-card: var(--bg-surface);
+  --color-card-foreground: var(--text-primary);
+
+  --color-popover: var(--bg-surface);
+  --color-popover-foreground: var(--text-primary);
+
+  --color-primary: var(--accent);
+  --color-primary-foreground: #ffffff;
+
+  --color-secondary: rgba(255, 255, 255, 0.1);
+  --color-secondary-foreground: var(--text-primary);
+
+  --color-muted: rgba(255, 255, 255, 0.05);
+  --color-muted-foreground: var(--text-muted);
+
+  --color-accent: var(--accent-pink);
+  --color-accent-foreground: #ffffff;
+
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+
+  --color-border: var(--border);
+  --color-input: var(--border);
+  --color-ring: var(--accent);
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --font-heading: var(--font-heading), 'Syne', sans-serif;
+  --font-body: var(--font-body), 'Inter', sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+:root {
+  --bg-base: #000000;
+  --bg-surface: #0a0a0a;
+
+  --text-primary: #ffffff;
+  --text-muted: #d1d5db;
+  --accent: #4f46e5;
+  --accent-pink: #111111;
+  --border: rgba(255, 255, 255, 0.767);
+  --secondary: rgb(126, 121, 121);
+
+  --radius: 1.25rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased font-body;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: white;
-  font-family: 'Inter', sans-serif;
+/* Custom Utilities */
+@layer utilities {
+  .glass-card {
+    @apply bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] shadow-2xl;
+  }
+
+  .glass-morphism {
+    @apply bg-black/60 backdrop-blur-md border border-white/10;
+  }
+
+  .glow-blue {
+    box-shadow: 0 0 40px -10px rgba(177, 174, 240, 0.815);
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:translate-y-[-4px] hover:bg-white/[0.06] hover:border-white/20;
+  }
+
+  .btn-primary {
+    @apply bg-indigo-600 text-white font-black py-4 px-8 rounded-2xl hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/20 transition-all active:scale-95;
+  }
+
+  .text-muted {
+    color: var(--text-muted);
+  }
 }
 
-.gradient-bg {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
-.glass-morphism {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+.animate-marquee {
+  animation: marquee 40s linear infinite;
 }
 
-.card-hover {
-  transition: all 0.3s ease;
+.animate-marquee-fast {
+  animation: marquee 20s linear infinite;
 }
 
-.card-hover:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+.animate-marquee-slow {
+  animation: marquee 60s linear infinite;
+}
+
+/* Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
 }

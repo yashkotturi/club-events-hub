@@ -4,12 +4,18 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
-import { Calendar, User as UserIcon, LogOut, LayoutDashboard, Compass } from 'lucide-react';
+import { Calendar, User as UserIcon, LogOut, LayoutDashboard, Compass, Sparkles } from 'lucide-react';
 
 export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
     });
@@ -18,7 +24,10 @@ export default function Navbar() {
       setUser(session?.user ?? null);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      subscription.unsubscribe();
+    };
   }, []);
 
   const handleLogout = async () => {
@@ -26,24 +35,28 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="gradient-bg text-white shadow-lg sticky top-0 z-50">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center space-x-8">
-            <Link href="/" className="flex items-center space-x-2 text-2xl font-bold tracking-tight">
-              <Calendar className="w-8 h-8" />
-              <span>ClubHub</span>
+    <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
+      isScrolled ? 'py-4 glass-card' : 'py-6 bg-transparent'
+    }`}>
+      <div className="container mx-auto px-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-12">
+            <Link href="/" className="flex items-center space-x-2 group">
+              <div className="p-2 bg-indigo-600 rounded-xl group-hover:rotate-6 transition-transform">
+                <Sparkles className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-xl font-black tracking-tighter text-white">
+                Club<span className="text-indigo-400">Hub</span>
+              </span>
             </Link>
             
-            <div className="hidden md:flex items-center space-x-1">
-              <Link href="/" className="px-4 py-2 rounded-lg hover:bg-white/10 transition-colors flex items-center space-x-2">
-                <Compass className="w-4 h-4" />
-                <span>Explore</span>
+            <div className="hidden md:flex items-center space-x-8">
+              <Link href="/" className="text-[10px] font-black uppercase tracking-widest text-gray-300 hover:text-white transition-colors">
+                Explore
               </Link>
               {user && (
-                <Link href="/my-events" className="px-4 py-2 rounded-lg hover:bg-white/10 transition-colors flex items-center space-x-2">
-                  <Calendar className="w-4 h-4" />
-                  <span>My Events</span>
+                <Link href="/my-events" className="text-[10px] font-black uppercase tracking-widest text-gray-300 hover:text-white transition-colors">
+                  My Events
                 </Link>
               )}
             </div>
@@ -51,31 +64,34 @@ export default function Navbar() {
 
           <div className="flex items-center space-x-4">
             {user ? (
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-6">
                 <div className="hidden sm:flex flex-col items-end">
-                  <span className="text-sm font-medium">{user.user_metadata?.full_name || user.email}</span>
-                  <span className="text-[10px] uppercase tracking-wider opacity-75">Student Member</span>
+                  <span className="text-sm font-bold text-white leading-none mb-1">
+                    {user.user_metadata?.full_name || user.email?.split('@')[0]}
+                  </span>
+                  <span className="text-[10px] uppercase font-black tracking-widest text-indigo-400">
+                    Student
+                  </span>
                 </div>
-                <div className="h-8 w-px bg-white/20 mx-2" />
                 <button
                   onClick={handleLogout}
-                  className="p-2 rounded-full hover:bg-white/10 transition-colors text-white/80 hover:text-white"
+                  className="p-2.5 rounded-xl border border-white/5 hover:bg-red-500/10 hover:text-red-500 transition-all text-muted"
                   title="Logout"
                 >
                   <LogOut className="w-5 h-5" />
                 </button>
               </div>
             ) : (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-3">
                 <Link 
                   href="/login" 
-                  className="px-4 py-2 rounded-lg hover:bg-white/10 transition-colors font-medium border border-white/20"
+                  className="px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-gray-200 hover:text-white transition-colors"
                 >
                   Sign In
                 </Link>
                 <Link 
                   href="/register" 
-                  className="px-4 py-2 bg-white text-indigo-600 rounded-lg hover:bg-opacity-90 transition-all font-bold shadow-md"
+                  className="px-6 py-2.5 bg-white text-black rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition-all shadow-lg active:scale-95"
                 >
                   Join Now
                 </Link>

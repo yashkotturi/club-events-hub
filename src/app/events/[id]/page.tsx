@@ -89,6 +89,9 @@ export default function EventDetailPage() {
     setRegistering(true);
     setErrorMessage('');
 
+    // Open Google Form in a new tab
+    window.open('https://forms.gle/nK2qvLbHJ599WTU56', '_blank');
+
     try {
       const { error } = await supabase
         .from('registrations')
@@ -98,12 +101,8 @@ export default function EventDetailPage() {
           status: 'registered'
         });
 
-      if (error) {
-        if (error.code === '23505') {
-          setErrorMessage('You are already registered for this event.');
-        } else {
-          setErrorMessage(error.message);
-        }
+      if (error && error.code !== '23505') {
+        setErrorMessage(error.message);
         setRegistrationStatus('error');
       } else {
         setRegistrationStatus('success');
@@ -119,18 +118,18 @@ export default function EventDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-10 h-10 animate-spin text-indigo-600" />
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <Loader2 className="w-12 h-12 animate-spin text-indigo-500" />
       </div>
     );
   }
 
   if (!event) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4">
-        <h2 className="text-2xl font-bold mb-4">Event not found</h2>
-        <Link href="/" className="text-indigo-600 font-bold hover:underline flex items-center">
-          <ArrowLeft className="mr-2 w-4 h-4" /> Back to Explore
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-black">
+        <h2 className="text-3xl font-black text-white mb-6 tracking-tighter">Protocol not found</h2>
+        <Link href="/" className="btn-primary inline-flex items-center text-[10px] uppercase tracking-[0.2em] px-10 py-4">
+          <ArrowLeft className="mr-3 w-4 h-4" /> Back to Explore
         </Link>
       </div>
     );
@@ -139,61 +138,62 @@ export default function EventDetailPage() {
   const date = new Date(event.date_time);
 
   return (
-    <div className="bg-white min-h-screen pb-20">
+    <div className="bg-black min-h-screen pb-32">
       {/* Header Image */}
-      <div className="relative h-[40vh] md:h-[60vh] w-full">
+      <div className="relative h-[50vh] md:h-[65vh] w-full">
         <img 
           src={event.image_url || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070&auto=format&fit=crop'} 
           alt={event.title}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover grayscale-[0.3]"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+        
         <Link 
           href="/"
-          className="absolute top-8 left-8 p-3 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/40 transition-all z-20"
+          className="absolute top-12 left-12 p-4 bg-white/[0.05] backdrop-blur-md border border-white/10 rounded-2xl text-white hover:bg-white/[0.1] transition-all z-20"
         >
           <ArrowLeft className="w-6 h-6" />
         </Link>
         
-        <div className="absolute bottom-12 left-0 right-0 z-10">
-          <div className="container mx-auto px-4">
-            <span className="px-4 py-1.5 bg-indigo-600 text-white rounded-full text-sm font-bold uppercase tracking-widest mb-4 inline-block">
+        <div className="absolute bottom-20 left-0 right-0 z-10">
+          <div className="container mx-auto px-6">
+            <span className="px-4 py-1.5 bg-indigo-500/20 border border-indigo-500/30 text-indigo-400 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6 inline-block">
               {event.category}
             </span>
-            <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight max-w-4xl">
+            <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-[0.9] max-w-4xl">
               {event.title}
             </h1>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 -mt-10 relative z-20">
+      <div className="container mx-auto px-6 -mt-16 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-12">
-            <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100 italic text-gray-600 text-lg leading-relaxed">
-              {event.description}
+            <div className="bg-white/[0.03] backdrop-blur-xl rounded-[2.5rem] p-10 border border-white/5 shadow-2xl italic text-muted text-xl leading-relaxed font-medium">
+              "{event.description}"
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-gray-50 p-6 rounded-2xl flex items-start space-x-4">
-                <div className="p-3 bg-indigo-100 rounded-xl text-indigo-600">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="bg-white/[0.02] border border-white/5 p-8 rounded-[2rem] flex items-start space-x-6">
+                <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl text-indigo-400 shadow-inner">
                   <Calendar className="w-6 h-6" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-900">Date & Time</h4>
-                  <p className="text-gray-600">{date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                  <p className="text-gray-600 font-medium">{date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</p>
+                  <h4 className="text-[10px] font-black text-muted uppercase tracking-[0.3em] mb-2">Schedule Detail</h4>
+                  <p className="text-white font-black text-xl tracking-tighter">{date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+                  <p className="text-indigo-400 font-bold tabular-nums mt-1">{date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</p>
                 </div>
               </div>
               
-              <div className="bg-gray-50 p-6 rounded-2xl flex items-start space-x-4">
-                <div className="p-3 bg-indigo-100 rounded-xl text-indigo-600">
+              <div className="bg-white/[0.02] border border-white/5 p-8 rounded-[2rem] flex items-start space-x-6">
+                <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl text-indigo-400 shadow-inner">
                   <MapPin className="w-6 h-6" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-900">Location</h4>
-                  <p className="text-gray-600">{event.location}</p>
+                  <h4 className="text-[10px] font-black text-muted uppercase tracking-[0.3em] mb-2">Sector Location</h4>
+                  <p className="text-white font-black text-xl tracking-tighter">{event.location}</p>
                 </div>
               </div>
             </div>
@@ -201,64 +201,71 @@ export default function EventDetailPage() {
 
           {/* Sidebar / Registration */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-3xl p-8 shadow-2xl border border-gray-100 sticky top-24">
-              <div className="flex items-center justify-between mb-8 pb-8 border-b border-gray-100 text-gray-500 font-medium">
+            <div className="bg-white/[0.03] backdrop-blur-2xl rounded-[3rem] p-10 border border-white/5 shadow-2xl sticky top-32">
+              <div className="flex items-center justify-between mb-10 pb-10 border-b border-white/5">
                 <div className="flex items-center">
-                  <Users className="w-5 h-5 mr-3 text-indigo-400 font-bold" />
-                  <span>Available Capacity</span>
+                  <Users className="w-5 h-5 mr-4 text-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.4)]" />
+                  <span className="text-[10px] font-black text-muted uppercase tracking-[0.2em]">Operational Capacity</span>
                 </div>
-                <span className="text-gray-900 font-bold text-lg">{event.capacity} Spots</span>
+                <span className="text-white font-black text-2xl tabular-nums tracking-tighter">{event.capacity}</span>
               </div>
 
               {registrationStatus === 'success' ? (
-                <div className="text-center py-6">
-                  <div className="inline-block p-4 bg-green-100 rounded-full text-green-600 mb-4">
-                    <CheckCircle2 className="w-10 h-10" />
+                <div className="text-center py-10">
+                  <div className="inline-block p-6 bg-emerald-500/10 border border-emerald-500/20 rounded-[2rem] text-emerald-400 mb-8 shadow-inner">
+                    <CheckCircle2 className="w-12 h-12" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">You're going!</h3>
-                  <p className="text-gray-500 mb-6">A confirmation has been sent to your student email.</p>
-                  <Link href="/my-events" className="text-indigo-600 font-bold hover:underline">
-                    View My Events
+                  <h3 className="text-3xl font-black text-white mb-4 tracking-tighter leading-none">Authentication Successful</h3>
+                  <p className="text-muted font-bold mb-10 text-sm leading-relaxed">External portal activated. Your session has been synchronized for this event.</p>
+                  <Link href="/my-events" className="btn-primary inline-flex text-[10px] font-black uppercase tracking-[0.2em] px-10 py-5">
+                    View My Actions
                   </Link>
                 </div>
               ) : registrationStatus === 'error' ? (
-                <div className="text-center py-6">
-                  <div className="inline-block p-4 bg-red-100 rounded-full text-red-600 mb-4">
-                    <AlertCircle className="w-10 h-10" />
+                <div className="text-center py-10">
+                  <div className="inline-block p-6 bg-rose-500/10 border border-rose-500/20 rounded-[2rem] text-rose-400 mb-8 shadow-inner">
+                    <AlertCircle className="w-12 h-12" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Registration Failed</h3>
-                  <p className="text-red-500 mb-6">{errorMessage}</p>
+                  <h3 className="text-3xl font-black text-white mb-4 tracking-tighter leading-none">Access Error</h3>
+                  <p className="text-rose-400 font-bold mb-10 text-sm opacity-80">{errorMessage}</p>
                   <button 
                     onClick={() => setRegistrationStatus('idle')}
-                    className="text-indigo-600 font-bold hover:underline"
+                    className="text-indigo-400 font-black text-[10px] uppercase tracking-[0.2em] hover:text-white transition-colors"
                   >
-                    Try Again
+                    Retry Handshake
                   </button>
                 </div>
               ) : isRegistered ? (
-                <div className="text-center py-6">
-                  <div className="inline-block p-4 bg-indigo-50 rounded-full text-indigo-600 mb-4">
-                    <CheckCircle2 className="w-10 h-10" />
+                <div className="text-center py-10">
+                  <div className="inline-block p-6 bg-indigo-500/10 border border-indigo-500/20 rounded-[2rem] text-indigo-400 mb-8 shadow-inner">
+                    <CheckCircle2 className="w-12 h-12" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Already Registered</h3>
-                  <p className="text-gray-500 mb-6">You are secured for this event.</p>
-                  <Link href="/my-events" className="w-full inline-block py-4 bg-indigo-600 text-white rounded-2xl font-bold text-lg shadow-lg shadow-indigo-200">
-                    Get QR Code
+                  <h3 className="text-3xl font-black text-white mb-4 tracking-tighter leading-none">Registration Secured</h3>
+                  <p className="text-muted font-bold mb-10 text-sm leading-relaxed">Your identifier is already locked for this protocol.</p>
+                  <Link href="/my-events" className="btn-secondary w-full inline-block py-5 text-[10px] font-black uppercase tracking-[0.2em] shadow-2xl">
+                    View Registration
                   </Link>
                 </div>
               ) : (
                 <button 
                   onClick={handleRegister}
                   disabled={registering}
-                  className="w-full py-5 gradient-bg text-white rounded-2xl font-bold text-xl shadow-lg shadow-indigo-200 hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center"
+                  className="w-full py-6 gradient-bg text-white rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.3em] shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center disabled:opacity-50"
                 >
-                  {registering ? <Loader2 className="w-6 h-6 animate-spin" /> : 'Register for Event'}
+                  {registering ? (
+                    <Loader2 className="w-6 h-6 animate-spin" />
+                  ) : (
+                    'Initiate Registration'
+                  )}
                 </button>
               )}
 
-              <p className="mt-6 text-center text-sm text-gray-400">
-                Managed by <span className="text-gray-600 font-bold uppercase tracking-wider">{event.club_name}</span>
-              </p>
+              <div className="mt-10 pt-10 border-t border-white/5 text-center">
+                <p className="text-[10px] font-black text-muted uppercase tracking-[0.4em] mb-4">Authority</p>
+                <div className="inline-block px-5 py-2.5 bg-white/[0.03] border border-white/5 rounded-xl text-white text-[10px] font-black uppercase tracking-[0.1em]">
+                  {event.club_name}
+                </div>
+              </div>
             </div>
           </div>
         </div>
