@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { 
-  Search, 
-  MapPin, 
-  Users, 
-  ArrowRight, 
-  Sparkles, 
-  Calendar as CalendarIcon, 
+import {
+  Search,
+  MapPin,
+  Users,
+  ArrowRight,
+  Sparkles,
+  Calendar as CalendarIcon,
   Filter,
   ChevronRight,
   Plus
@@ -74,7 +74,7 @@ export default function Home() {
   async function fetchData() {
     try {
       setLoading(true);
-      
+
       // Fetch Events
       const { data: eventsData, error: eventsError } = await supabase
         .from('events')
@@ -87,7 +87,7 @@ export default function Home() {
         .order('date_time', { ascending: true });
 
       if (eventsError) throw eventsError;
-      
+
       const formattedEvents = (eventsData || []).map((e: any) => ({
         ...e,
         club_name: e.clubs?.name || 'Unknown Club'
@@ -102,10 +102,9 @@ export default function Home() {
         .limit(6);
 
       if (clubsError) throw clubsError;
-      
-      // Combine Mock clubs with actual DB clubs, prioritizing mock for visual consistency
-      const combinedClubs = [...MOCK_CLUBS.slice(0, 6), ...(clubsData || [])].slice(0, 6);
-      setClubs(combinedClubs);
+
+      // Real database entries must be used to ensure valid UUIDs for routing
+      setClubs(clubsData || []);
 
     } catch (error: any) {
       console.error('Error fetching data:', error);
@@ -114,7 +113,7 @@ export default function Home() {
     }
   }
 
-  const categories = ['All', 'Workshop', 'Seminar', 'Social', 'Competition', 'Other'];
+  const categories = ['All', 'Technical', 'Non-Technical', 'Social', 'Competition', 'Other'];
 
   const filteredEvents = events.filter(event => {
     const eventDate = new Date(event.date_time);
@@ -138,7 +137,7 @@ export default function Home() {
       <section className="relative pt-40 pb-32 overflow-hidden isolate">
         {/* Background Decorative Element */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-gradient-to-b from-indigo-500/10 to-transparent -z-10 rounded-full blur-[120px] opacity-40" />
-        
+
         {/* Logo Marquee Background - Supercharged Visibility */}
         <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 z-10 pointer-events-none space-y-8 opacity-[0.35]">
           <Marquee speed="medium" direction="left">
@@ -162,27 +161,27 @@ export default function Home() {
             <Sparkles className="w-4 h-4" />
             <span>Empowering Campus Life</span>
           </div>
-          
+
           <h1 className="text-6xl md:text-9xl font-black text-white mb-10 tracking-tighter leading-[0.85] animate-in fade-in slide-in-from-bottom-8 duration-700">
             Designing the Future <br />
             <span className="text-white opacity-50">of Student Events</span>
           </h1>
-          
+
           <p className="max-w-2xl mx-auto text-lg md:text-xl text-muted font-medium mb-16 leading-relaxed animate-in fade-in slide-in-from-bottom-12 duration-1000">
-            The premier hub for MIT Manipal students. 
+            The premier hub for MIT Manipal students.
             Discover, register, and lead the campus narrative with absolute precision.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-in fade-in slide-in-from-bottom-16 duration-1000">
-            <button 
+            <button
               onClick={() => document.getElementById('explore')?.scrollIntoView({ behavior: 'smooth' })}
               className="btn-primary flex items-center group w-full sm:w-auto justify-center px-12 py-5 shadow-2xl shadow-indigo-500/10"
             >
               Get Started
               <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
-            <Link 
-              href="/register" 
+            <Link
+              href="/register"
               className="px-10 py-5 bg-white/[0.03] border border-white/5 text-white font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl hover:bg-white/[0.06] transition-all w-full sm:w-auto text-center"
             >
               Join the Network
@@ -203,16 +202,54 @@ export default function Home() {
               <button
                 key={cat}
                 onClick={() => setCategoryFilter(cat)}
-                className={`px-8 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all shrink-0 ${
-                  categoryFilter === cat 
-                  ? 'bg-white text-black shadow-2xl' 
-                  : 'bg-white/[0.03] text-muted hover:text-white hover:bg-white/[0.08] border border-white/10'
-                }`}
+                className={`px-8 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all shrink-0 ${categoryFilter === cat
+                    ? 'bg-white text-black shadow-2xl'
+                    : 'bg-white/[0.03] text-muted hover:text-white hover:bg-white/[0.08] border border-white/10'
+                  }`}
               >
                 {cat}
               </button>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* 2.5 All Events Listing */}
+      <section className="py-32 bg-black overflow-hidden relative border-b border-white/5">
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
+            <div>
+              <div className="inline-flex items-center space-x-2 text-indigo-400 font-black text-[10px] uppercase tracking-[0.2em] mb-4">
+                <Sparkles className="w-4 h-4" />
+                <span>Global Discovery</span>
+              </div>
+              <h2 className="text-5xl font-black text-white tracking-tighter mb-4 leading-none">All Protocols</h2>
+              <p className="text-muted font-bold tracking-tight text-lg max-w-xl">Browse all active events across the entire campus network.</p>
+            </div>
+            
+            <div className="hidden md:flex items-center justify-center p-6 bg-white/[0.02] border border-white/5 rounded-[2rem] min-w-40 backdrop-blur-md">
+              <div className="text-center">
+                <span className="block text-4xl font-black text-white tabular-nums tracking-tighter leading-none">{events.length}</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400 mt-2 block">Active</span>
+              </div>
+            </div>
+          </div>
+          
+          {events.length > 0 ? (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {events.map(event => (
+                <EventTimelineCard key={event.id} event={event} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-32 bg-white/[0.02] rounded-[3.5rem] border border-dashed border-white/5">
+               <div className="inline-block p-8 bg-white/[0.03] rounded-full mb-8 text-indigo-400">
+                 <CalendarIcon className="w-10 h-10" />
+               </div>
+               <h3 className="text-2xl font-black text-white mb-3 tracking-tight">No active protocols</h3>
+               <p className="text-muted font-medium max-w-sm mx-auto">The network is currently dormant.</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -224,18 +261,18 @@ export default function Home() {
             <div className="lg:w-[400px] shrink-0 lg:sticky lg:top-32 h-fit">
               <div className="glass-card p-12 rounded-[3.5rem] border border-white/5">
                 <h3 className="text-3xl font-black text-white mb-10 tracking-tighter">Event Calendar</h3>
-                <Calendar 
-                  selectedDate={selectedDate} 
-                  onDateSelect={setSelectedDate} 
+                <Calendar
+                  selectedDate={selectedDate}
+                  onDateSelect={setSelectedDate}
                   eventDates={eventDateMarkers}
                 />
-                
+
                 <div className="mt-16 pt-16 border-t border-white/5">
                   <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-300">Quick Search</h4>
                   <div className="relative">
                     <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-muted/60 w-4 h-4" />
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       placeholder="Find an event..."
                       className="w-full pl-16 pr-6 py-5 rounded-2xl bg-white/[0.03] border border-white/10 text-sm placeholder:text-muted/50 focus:ring-2 focus:ring-indigo-500/50 transition-all font-bold text-white shadow-inner"
                       value={searchTerm}
@@ -310,7 +347,7 @@ export default function Home() {
               <ClubCard key={club.id} club={club} />
             ))}
           </div>
-          
+
           <div className="mt-24 text-center">
             <button className="px-16 py-6 bg-white/[0.03] border border-white/5 text-white rounded-[2rem] font-black text-[10px] uppercase tracking-[0.3em] hover:bg-white hover:text-black transition-all">
               Browse All Clubs
@@ -324,16 +361,16 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-12">
             <div className="flex flex-col md:flex-row items-center gap-6">
-               <Link href="/" className="text-white font-black tracking-tighter text-2xl">
-                 Club<span className="text-indigo-400">Hub</span>
-               </Link>
-               <div className="hidden md:block w-px h-6 bg-white/5" />
-               <p className="text-muted text-[10px] font-black uppercase tracking-[0.2em]">© 2026 Architected by PRISM</p>
+              <Link href="/" className="text-white font-black tracking-tighter text-2xl">
+                Club<span className="text-indigo-400">Hub</span>
+              </Link>
+              <div className="hidden md:block w-px h-6 bg-white/5" />
+              <p className="text-muted text-[10px] font-black uppercase tracking-[0.2em]">© 2026 Architected by PRISM</p>
             </div>
             <div className="flex items-center space-x-12 text-muted text-[10px] font-black uppercase tracking-[0.2em]">
-               <a href="#" className="hover:text-white transition-colors">Digital Governance</a>
-               <a href="#" className="hover:text-white transition-colors">Privacy Lexicon</a>
-               <a href="#" className="hover:text-white transition-colors">Protocol Support</a>
+              <a href="#" className="hover:text-white transition-colors">----</a>
+              <a href="#" className="hover:text-white transition-colors">-----</a>
+              <a href="#" className="hover:text-white transition-colors">-----</a>
             </div>
           </div>
         </div>
