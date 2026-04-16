@@ -12,7 +12,10 @@ import {
   ExternalLink,
   Calendar,
   Globe,
-  Star
+  Star,
+  Camera,
+  Share2,
+  Send
 } from 'lucide-react';
 import Link from 'next/link';
 import EventTimelineCard from '@/components/ui/EventTimelineCard';
@@ -334,7 +337,7 @@ export default function ClubProfilePage() {
                   <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                   
                   <div className="relative mb-12">
-                    <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px bg-white/5 z-0" />
+                      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px bg-white/5 z-0" />
                     <div className="relative z-10 inline-block">
                       <div className="absolute inset-0 bg-indigo-500 rounded-full blur-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-700" />
                       <div className="relative p-2 rounded-full bg-black/40 border border-white/10 backdrop-blur-xl">
@@ -381,6 +384,59 @@ export default function ClubProfilePage() {
             </div>
           </div>
         )}
+
+        {/* 3. Social Media Links Section */}
+        <div className="mt-32 pt-20 border-t border-white/5 text-center px-6">
+          <div className="inline-flex items-center space-x-2 text-indigo-400 font-black text-[10px] uppercase tracking-[0.3em] mb-6">
+            <Globe className="w-4 h-4" />
+            <span>Digital Presence</span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-12 leading-none">Connect with the Network</h2>
+          
+          <div className="flex flex-wrap items-center justify-center gap-6">
+            {club.instagram_url && (
+              <a 
+                href={club.instagram_url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="group relative flex flex-col items-center p-8 bg-white/[0.02] border border-white/5 rounded-[2.5rem] hover:bg-white/[0.05] hover:border-indigo-500/30 transition-all duration-500 hover:-translate-y-2"
+              >
+                <div className="absolute inset-0 bg-indigo-500 rounded-[2.5rem] blur-2xl opacity-0 group-hover:opacity-10 transition-opacity" />
+                <Camera className="w-8 h-8 text-muted group-hover:text-white transition-colors mb-4 relative z-10" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted group-hover:text-white relative z-10">Instagram</span>
+              </a>
+            )}
+            
+            <a 
+              href="#" 
+              className="group relative flex flex-col items-center p-8 bg-white/[0.02] border border-white/5 rounded-[2.5rem] hover:bg-white/[0.05] hover:border-indigo-500/30 transition-all duration-500 hover:-translate-y-2"
+            >
+              <div className="absolute inset-0 bg-indigo-500 rounded-[2.5rem] blur-2xl opacity-0 group-hover:opacity-10 transition-opacity" />
+              <Share2 className="w-8 h-8 text-muted group-hover:text-white transition-colors mb-4 relative z-10" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted group-hover:text-white relative z-10">LinkedIn</span>
+            </a>
+
+            <a 
+              href="#" 
+              className="group relative flex flex-col items-center p-8 bg-white/[0.02] border border-white/5 rounded-[2.5rem] hover:bg-white/[0.05] hover:border-indigo-500/30 transition-all duration-500 hover:-translate-y-2"
+            >
+              <div className="absolute inset-0 bg-indigo-500 rounded-[2.5rem] blur-2xl opacity-0 group-hover:opacity-10 transition-opacity" />
+              <Send className="w-8 h-8 text-muted group-hover:text-white transition-colors mb-4 relative z-10" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted group-hover:text-white relative z-10">Discord</span>
+            </a>
+
+            <a 
+              href="#" 
+              className="group relative flex flex-col items-center p-8 bg-white/[0.02] border border-white/5 rounded-[2.5rem] hover:bg-white/[0.05] hover:border-indigo-500/30 transition-all duration-500 hover:-translate-y-2"
+            >
+              <div className="absolute inset-0 bg-indigo-500 rounded-[2.5rem] blur-2xl opacity-0 group-hover:opacity-10 transition-opacity" />
+              <Globe className="w-8 h-8 text-muted group-hover:text-white transition-colors mb-4 relative z-10" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted group-hover:text-white relative z-10">Website</span>
+            </a>
+          </div>
+
+          <p className="mt-16 text-[8px] font-black text-muted uppercase tracking-[0.3em]">Authorized Digital Portal — End of Phase</p>
+        </div>
       </div>
     </div>
   );
