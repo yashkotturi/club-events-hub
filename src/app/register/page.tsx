@@ -81,7 +81,7 @@ export default function RegisterPage() {
             )}
 
             <form onSubmit={handleRegister} className="space-y-4 relative z-10">
-              <div className="bg-[#111] border border-white/5 rounded-2xl p-3 px-5 focus-within:border-blue-500/30 transition-colors">
+              <div className="bg-[#111] border border-white/5 rounded-2xl p-3 px-5 focus-within:border-emerald-500/30 transition-colors">
                 <span className="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Full Name</span>
                 <input
                   type="text"
@@ -93,7 +93,7 @@ export default function RegisterPage() {
                 />
               </div>
 
-              <div className="bg-[#111] border border-white/5 rounded-2xl p-3 px-5 focus-within:border-blue-500/30 transition-colors">
+              <div className="bg-[#111] border border-white/5 rounded-2xl p-3 px-5 focus-within:border-emerald-500/30 transition-colors">
                 <span className="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">University Email</span>
                 <input
                   type="email"
@@ -105,7 +105,7 @@ export default function RegisterPage() {
                 />
               </div>
 
-              <div className="bg-[#111] border border-white/5 rounded-2xl p-3 px-5 focus-within:border-blue-500/30 transition-colors">
+              <div className="bg-[#111] border border-white/5 rounded-2xl p-3 px-5 focus-within:border-emerald-500/30 transition-colors">
                 <span className="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Password</span>
                 <input
                   type="password"
@@ -126,7 +126,7 @@ export default function RegisterPage() {
                   className="w-full flex items-center justify-between pl-6 pr-2 py-2 bg-[#141414] border border-white/5 rounded-[2rem] hover:bg-white/[0.05] hover:border-white/10 transition-all group disabled:opacity-50 shadow-inner"
                 >
                   <span className="text-sm text-gray-300 font-medium">Continue with Email</span>
-                  <div className="w-10 h-10 rounded-full bg-blue-400 flex items-center justify-center shrink-0 group-hover:bg-blue-300 group-active:scale-95 transition-all shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+                  <div className="w-10 h-10 rounded-full bg-emerald-400 flex items-center justify-center shrink-0 group-hover:bg-emerald-300 group-active:scale-95 transition-all shadow-[0_0_15px_rgba(52,211,153,0.3)]">
                     {loading ? (
                       <Loader2 className="animate-spin w-4 h-4 text-black" />
                     ) : (
@@ -140,7 +140,7 @@ export default function RegisterPage() {
             <div className="mt-10 relative z-10 text-center">
               <p className="text-xs text-gray-400">
                 Already have an account?{' '}
-                <Link href="/login" className="text-blue-400 hover:text-blue-300 hover:underline transition-colors font-medium">
+                <Link href="/login" className="text-emerald-400 hover:text-emerald-300 hover:underline transition-colors font-medium">
                   Sign in
                 </Link>
               </p>
