@@ -54,6 +54,9 @@ export default function Navbar() {
               <Link href="/" className="text-[10px] font-black uppercase tracking-widest text-gray-300 hover:text-white transition-colors">
                 Explore
               </Link>
+              <Link href="/clubs" className="text-[10px] font-black uppercase tracking-widest text-gray-300 hover:text-white transition-colors">
+                Clubs
+              </Link>
               {user && (
                 <Link href="/my-events" className="text-[10px] font-black uppercase tracking-widest text-gray-300 hover:text-white transition-colors">
                   My Events

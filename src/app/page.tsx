@@ -354,9 +354,12 @@ export default function Home() {
           </div>
 
           <div className="mt-24 text-center">
-            <button className="px-16 py-6 bg-white/[0.03] border border-white/5 text-white rounded-[2rem] font-black text-[10px] uppercase tracking-[0.3em] hover:bg-white hover:text-black transition-all">
+            <Link 
+              href="/clubs"
+              className="inline-block px-16 py-6 bg-white/[0.03] border border-white/5 text-white rounded-[2rem] font-black text-[10px] uppercase tracking-[0.3em] hover:bg-white hover:text-black transition-all shadow-2xl"
+            >
               Browse All Clubs
-            </button>
+            </Link>
           </div>
         </div>
       </section>

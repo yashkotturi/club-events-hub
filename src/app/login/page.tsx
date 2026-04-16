@@ -35,28 +35,27 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#050505] px-6 relative overflow-hidden">
       {/* Background ambient glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-emerald-500/10 rounded-full blur-[150px] pointer-events-none" />
-
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/30 rounded-full blur-[150px] pointer-events-none" />
       {/* Branding - Header outside the card */}
       <div className="text-center mb-8 relative z-10">
-         <Link href="/" className="inline-flex items-center space-x-2 group">
-            <div className="p-1.5 bg-indigo-600 rounded-lg shadow-lg shadow-indigo-500/30">
-              <Sparkles className="w-4 h-4 text-white" />
-            </div>
-            <span className="text-xl font-black tracking-tighter text-white">
-              Club<span className="text-indigo-400">Hub</span>
-            </span>
-          </Link>
+        <Link href="/" className="inline-flex items-center space-x-2 group">
+          <div className="p-1.5 bg-indigo-600 rounded-lg shadow-lg shadow-indigo-500/30">
+            <Sparkles className="w-4 h-4 text-white" />
+          </div>
+          <span className="text-xl font-black tracking-tighter text-white">
+            Club<span className="text-indigo-400">Hub</span>
+          </span>
+        </Link>
       </div>
 
       <div className="w-full max-w-[420px] relative z-20">
         {/* The Glass Card wrapping border */}
         <div className="relative p-[1px] rounded-[2.5rem] bg-gradient-to-br from-emerald-400/30 via-white/5 to-transparent shadow-2xl">
           <div className="relative bg-[#0a0a0a]/90 backdrop-blur-2xl rounded-[2.5rem] p-8 sm:p-10 overflow-hidden">
-            
+
             {/* Inner top-left intense glow */}
             <div className="absolute -top-10 -left-10 w-48 h-48 bg-emerald-500/20 rounded-full blur-[60px] pointer-events-none" />
-            
+
             <div className="relative z-10 text-center mb-10">
               <h2 className="text-3xl font-medium text-white tracking-tight mb-2">Welcome back</h2>
               <p className="text-sm text-gray-400">Sign in to your account</p>
