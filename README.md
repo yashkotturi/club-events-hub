@@ -1,75 +1,149 @@
-# MIT ClubHub
+# 🎉 Club Events Hub
 
-The premier event management and student networking platform for MIT Manipal. Built with a stunning "Deep Dark" OLED glassmorphic design system to provide an elite, high-contrast user experience.
+### Your Campus Event Management & Discovery Platform
 
-![ClubHub Banner](https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070&auto=format&fit=crop) *(Demo Background)*
+Club Events Hub is a centralized platform designed to **simplify how college clubs create, manage, and promote events**. It helps students discover events easily while enabling organizers to manage everything in one place.
 
-## 🚀 Tech Stack
+Inspired by real-world event communities that focus on bringing people together through social and organized activities ([Meetup][1]), this project focuses on making campus engagement seamless and efficient.
 
-*   **Framework**: [Next.js 16.2](https://nextjs.org/) (Turbopack)
-*   **Styling**: Tailwind CSS (Deep Dark Theme)
-*   **Database & Auth**: [Supabase](https://supabase.com/)
-*   **Icons**: Lucide React
-*   **Avatars**: DiceBear Identicon API
+---
 
-## 🛠️ How to Clone and Run Locally
+## 🚀 Features
 
-Follow these steps to set up the development environment on your local machine.
+* 🎯 **Event Discovery**
+  * Browse upcoming events across different clubs
+  * View event details, timing, and location
 
-### 1. Clone the Repository
+* 📝 **Event Creation**
+  * Clubs can create and publish events easily
+  * Add descriptions, dates, and other details
 
-Open your terminal and clone the repository using Git:
+* 👥 **Centralized Platform**
+  * One place for all campus events
+  * No need to track multiple WhatsApp groups or posters
 
-```bash
+* 🔍 **Clean UI**
+  * Simple and intuitive interface
+  * Easy navigation for both users and organizers
+
+* 📢 **Improved Communication**
+  * Reduces missed events
+  * Keeps students updated in real-time
+
+---
+
+## 🧠 Problem It Solves
+
+In most colleges:
+* Events are scattered across **WhatsApp groups, posters, and social media**
+* Students often **miss important events**
+* Organizers struggle with **visibility and reach**
+
+👉 Club Events Hub solves this by acting as a **single source of truth for all events**
+
+---
+
+## 🧩 System Design
+
+### 🔁 Flow
+
+```id="flow1"
+Organizer → Create Event → Store in Database → Display on Platform → Users Discover
+```
+
+---
+
+## 🛠️ Tech Stack
+
+* **Frontend:** Next.js 16.2, Tailwind CSS (Deep Dark Theme)
+* **Backend:** Supabase (Auth & Database)
+* **Icons:** Lucide React
+* **Database:** Supabase (PostgreSQL)
+
+---
+
+## ⚙️ Setup & Installation
+
+### 1️⃣ Clone the repo
+
+```bash id="clone1"
 git clone https://github.com/yashkotturi/club-events-hub.git
 cd club-events-hub
 ```
 
-### 2. Install Dependencies
+---
 
-You can use `npm`, `yarn`, `pnpm`, or `bun`. We recommend standard `npm`:
+### 2️⃣ Install dependencies
 
-```bash
+```bash id="install1"
 npm install
 ```
 
-### 3. Configure Environment Variables
+---
 
-The project relies on Supabase for data fetching and authentication. You need to link it to the database.
+### 3️⃣ Run the app
 
-Create a `.env.local` file in the root directory:
-
-```bash
-touch .env.local
-```
-
-Open the file and add your Supabase credentials:
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
-*(Reach out to the project administrator if you need access to the development database).*
-
-### 4. Run the Development Server
-
-Start the Turbopack-powered Next.js development server:
-
-```bash
+```bash id="run1"
 npm run dev
 ```
 
-### 5. Access the Platform
+---
 
-Open your browser and navigate to [http://localhost:3000](http://localhost:3000). You should see the glassmorphic landing page!
+## 📌 Usage
+
+1. Open the app in your browser ([http://localhost:3000](http://localhost:3000))
+2. Browse existing events
+3. Create a new event (if organizer)
+4. Share and participate 🎉
 
 ---
 
-## 🔒 Directory Structure Overview
+## ⚡ What Makes This Project Stand Out
 
-*   `src/app/`: Next.js App Router endpoints (Landing, Auth, Clubs, Events, Admin Dashboard)
-*   `src/components/`: Reusable UI components (Navbar, EventTimelineCard, Marquee, Glass Cards)
-*   `src/lib/`: Core utilities and API clients (Supabase instantiation)
+* ✅ Focus on **real student pain points**
+* ✅ Simple but **high-impact use case**
+* ✅ Clean and scalable structure
+* ✅ Can be extended into a **full campus product**
+
+---
+
+## 🚀 Future Improvements
+
+* 🔔 Notifications (email / WhatsApp / app)
+* 📱 Mobile-friendly / app version
+* 🧑🤝🧑 User authentication (clubs vs students)
+* 📊 Event analytics (attendance, engagement)
+* 🗓️ Calendar integration
+* 🎟️ RSVP / ticketing system
+
+---
 
 ## 🤝 Contributing
-Ensure all UI components adhere strictly to the established absolute-black and emerald/indigo glassmorphism aesthetic (`bg-black`, `bg-white/[0.02]`, and high-contrast tokens).
+
+Contributions are welcome!
+
+```bash id="contrib1"
+# Fork → Create branch → Commit → PR
+```
+
+---
+
+## 📄 License
+
+MIT License
+
+---
+
+## 👩💻 Author
+
+**Yashita Kotturi**
+
+* GitHub: [https://github.com/yashkotturi](https://github.com/yashkotturi)
+
+---
+
+## ⭐ If you like this project
+
+Give it a star ⭐ — it helps a lot!
+
+---
